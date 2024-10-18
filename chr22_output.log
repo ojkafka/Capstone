@@ -10,12 +10,12 @@ Call:
 --ld-wind-cm 1.0 \
 --out /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/Capstone/chr22_output \
 --bfile /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/ldsc/1kg_eur/filtered_22 \
---annot /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/Capstone/filtered_22_merged_SNP.annot \
+--annot /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/Capstone/22_SNP.annot \
 --l2  
 
-Beginning analysis at Thu Oct 10 16:41:41 2024
+Beginning analysis at Fri Oct 18 13:40:35 2024
 Read list of 18768 SNPs from /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/ldsc/1kg_eur/filtered_22.bim
-Read 5 annotations for 18768 SNPs from /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/Capstone/filtered_22_merged_SNP.annot
+Read 5 annotations for 18768 SNPs from /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/Capstone/22_SNP.annot
 Read list of 379 individuals from /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/ldsc/1kg_eur/filtered_22.fam
 Reading genotypes from /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/ldsc/1kg_eur/filtered_22.bed
 Estimating LD Score.
@@ -23,50 +23,49 @@ Writing LD Scores for 18768 SNPs to /Users/oliverkafka/Documents/NYU/3rd Sem NYU
 
 Summary of LD Scores in /Users/oliverkafka/Documents/NYU/3rd Sem NYU/Captone Project/Capstone/chr22_output.l2.ldscore.gz
          MAF  weighted_s_het_1L2  weighted_s_het_2L2  weighted_s_het_3L2  weighted_s_het_4L2  weighted_s_het_5L2
-mean  0.2355                 NaN                 NaN              0.0110              0.0070              0.0061
-std   0.1439                 NaN                 NaN              0.0253              0.0151              0.0126
-min   0.0013                -inf                -inf             -0.0011             -0.0006             -0.0004
-25%   0.1082              0.0014              0.0007              0.0005              0.0003              0.0002
-50%   0.2269              0.0184              0.0033              0.0022              0.0015              0.0014
-75%   0.3575              0.2008              0.0162              0.0094              0.0061              0.0058
-max   0.5000                 inf                 inf              0.2857              0.1261              0.1116
+mean  0.2355              0.4582              0.0189              0.0110              0.0070              0.0061
+std   0.1439              2.6145              0.0443              0.0253              0.0151              0.0126
+min   0.0013             -0.2978             -0.0052             -0.0011             -0.0006             -0.0004
+25%   0.1082              0.0022              0.0010              0.0005              0.0003              0.0002
+50%   0.2269              0.0267              0.0040              0.0022              0.0015              0.0014
+75%   0.3575              0.2096              0.0174              0.0094              0.0061              0.0058
+max   0.5000            114.1567              2.3056              0.2857              0.1261              0.1116
 
 MAF/LD Score Correlation Matrix
                        MAF  weighted_s_het_1L2  weighted_s_het_2L2  weighted_s_het_3L2  weighted_s_het_4L2  weighted_s_het_5L2
-MAF                 1.0000              0.0252              0.0848              0.0629              0.0916              0.0974
-weighted_s_het_1L2  0.0252              1.0000              0.1700              0.1951              0.2218              0.3279
-weighted_s_het_2L2  0.0848              0.1700              1.0000              0.8274              0.7932              0.6570
-weighted_s_het_3L2  0.0629              0.1951              0.8274              1.0000              0.8431              0.7794
-weighted_s_het_4L2  0.0916              0.2218              0.7932              0.8431              1.0000              0.8003
-weighted_s_het_5L2  0.0974              0.3279              0.6570              0.7794              0.8003              1.0000
+MAF                 1.0000              0.0304              0.0947              0.0629              0.0916              0.0974
+weighted_s_het_1L2  0.0304              1.0000              0.1588              0.2065              0.2259              0.3117
+weighted_s_het_2L2  0.0947              0.1588              1.0000              0.7045              0.6910              0.5715
+weighted_s_het_3L2  0.0629              0.2065              0.7045              1.0000              0.8431              0.7794
+weighted_s_het_4L2  0.0916              0.2259              0.6910              0.8431              1.0000              0.8003
+weighted_s_het_5L2  0.0974              0.3117              0.5715              0.7794              0.8003              1.0000
 
 LD Score Matrix Condition Number
-inf
-WARNING: ill-conditioned LD Score Matrix!
+449.8643
 
 Annotation Correlation Matrix
                   weighted_s_het_1  weighted_s_het_2  weighted_s_het_3  weighted_s_het_4  weighted_s_het_5
-weighted_s_het_1            1.0000            0.0037            0.0004            0.0087            0.0224
-weighted_s_het_2            0.0037            1.0000            0.1165            0.1353            0.0612
-weighted_s_het_3            0.0004            0.1165            1.0000            0.1062            0.0593
-weighted_s_het_4            0.0087            0.1353            0.1062            1.0000            0.0277
-weighted_s_het_5            0.0224            0.0612            0.0593            0.0277            1.0000
+weighted_s_het_1            1.0000            0.0182            0.0004            0.0087            0.0225
+weighted_s_het_2            0.0182            1.0000            0.0193            0.0229            0.0194
+weighted_s_het_3            0.0004            0.0193            1.0000            0.1062            0.0593
+weighted_s_het_4            0.0087            0.0229            0.1062            1.0000            0.0277
+weighted_s_het_5            0.0225            0.0194            0.0593            0.0277            1.0000
 
 Annotation Matrix Column Sums
-weighted_s_het_1       inf
-weighted_s_het_2       inf
-weighted_s_het_3    8.8058
-weighted_s_het_4    5.4356
-weighted_s_het_5    5.3527
+weighted_s_het_1    415.2335
+weighted_s_het_2     17.5956
+weighted_s_het_3      8.8058
+weighted_s_het_4      5.4356
+weighted_s_het_5      5.3527
 
 Summary of Annotation Matrix Row Sums
 count    1.8768e+04
-mean            inf
-std             NaN
+mean     2.4106e-02
+std      1.0011e+00
 min      4.1750e-05
 25%      5.8973e-04
 50%      1.6478e-03
 75%      4.5675e-03
-max             inf
-Analysis finished at Thu Oct 10 16:41:42 2024
-Total time elapsed: 1.36s
+max      1.1354e+02
+Analysis finished at Fri Oct 18 13:40:37 2024
+Total time elapsed: 1.37s
