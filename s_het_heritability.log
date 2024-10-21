@@ -1,0 +1,42 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.1
+* (C) 2014-2019 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--h2 LDSC_Out.sumstats.gz \
+--out s_het_heritability \
+--overlap-annot  \
+--frqfile 1000G.mac5eur.22 \
+--w-ld weights_chr22 \
+--print-coefficients  \
+--print-delete-vals  \
+--ref-ld chr22 
+
+Beginning analysis at Mon Oct 21 14:25:07 2024
+Reading summary statistics from LDSC_Out.sumstats.gz ...
+Read summary statistics for 1039667 SNPs.
+Reading reference panel LD Score from chr22 ... (ldscore_fromlist)
+Read reference panel LD Scores for 18768 SNPs.
+Removing partitioned LD Scores with zero variance.
+Reading regression weight LD Score from weights_chr22 ... (ldscore_fromlist)
+Read regression weight LD Scores for 17489 SNPs.
+After merging with reference panel LD, 14508 SNPs remain.
+After merging with regression SNP LD, 14394 SNPs remain.
+WARNING: number of SNPs less than 200k; this is almost always bad.
+Removed 0 SNPs with chi^2 > 133.858 (14394 SNPs remain)
+Printing block jackknife delete values to s_het_heritability.delete.
+Printing partitioned block jackknife delete values to s_het_heritability.part_delete.
+Total Observed scale h2: 0.0012 (0.0003)
+Categories: weighted_s_het_1L2_0 weighted_s_het_2L2_0 weighted_s_het_3L2_0 weighted_s_het_4L2_0 weighted_s_het_5L2_0
+Lambda GC: 1.1301
+Mean Chi^2: 1.2052
+Intercept: 0.8818 (0.0412)
+Ratio < 0 (usually indicates GC correction).
+Reading annot matrix from chr22 ... (annot)
+Results printed to s_het_heritability.results
+Analysis finished at Mon Oct 21 14:25:09 2024
+Total time elapsed: 2.5s
