@@ -15,7 +15,7 @@ from pandarallel import pandarallel
 import string
 import gc
 # =============================================================================
-#STEP 0: SET GLOBALS
+#STEP 0: SET GLOBAL PARAMS AND READ IN DATA FILES TO BE USED THROUGHOUT SCRIPT
 # =============================================================================
 
 root_fp = "/Users/tanvibansal/Documents/GitHub/Capstone/"
@@ -33,23 +33,12 @@ s_het_df["chr"] = s_het_df.chrom.apply(lambda x: x.split("chr")[1])
 s_het_df = s_het_df.loc[(s_het_df.chr != "X") & (s_het_df.chr != "Y")]
 s_het_df["chr"] = s_het_df["chr"].astype("int")
 
-chrom = 19
+chrom = 1
+branch_fp = "ld_score_outputs/chr%s/"%(chrom)
 # =============================================================================
-#STEP 1: PLINK CONVERSION OF 1000 GENOMES VCF FILE TO PLINK TRIPLET
+#STEP 1: SNP IDENTIFICATION OF 1000 GENOMES .BIM FILE WITH GWAS ID CONVENTION
 # =============================================================================
-eur_ind_fp = root_fp + "eur_individuals.txt"
-vcf_fp = root_fp + "ld_score_outputs/chr%s/ALL.chr%s.phase3_shapeit2_mvncall_integrated_v5b.20130502.genotypes.vcf.gz"%(chrom,chrom)
-vcf_to_plink_out_fp = root_fp + "ld_score_outputs/chr%s/converted_plink_triplet/%s_1000g"%(chrom,chrom)
-
-eur_individuals = pd.read_csv(eur_ind_fp,sep="\t")
-plink_conversion_cmd = "plink --vcf %s --keep %s --make-bed --out %s"%(vcf_fp, eur_ind_fp, vcf_to_plink_out_fp)
-print(plink_conversion_cmd)
-#RUN THE PLINK CONVERSION COMMAND IN THE PYTHON TERMINAL FOR THE LDSC ENVRIONMENT
-
-# =============================================================================
-#STEP 2: SNP IDENTIFICATION OF 1000 GENOMES .BIM FILE WITH GWAS ID CONVENTION
-# =============================================================================
-bim_fp = vcf_to_plink_out_fp + ".bim"
+bim_fp = root_fp + branch_fp + "converted_plink_triplet/%s_1000g.bim"%(chrom)
 cm_fp = root_fp + "ld_score_outputs/CM_values/chr%s.bim"%(chrom)
 
 def modify_bim_file(chrom, bim_fp, gwas_df,cm_fp):
@@ -120,88 +109,99 @@ def modify_bim_file(chrom, bim_fp, gwas_df,cm_fp):
     
     #fill in remaining null values with 1.0
     bim_snp_cm_matched.loc[bim_snp_cm_matched.CM.isnull(),"CM"] = float(1.0)
-    return bim_snp_cm_matched
+    return bim, bim_snp_cm_matched
+bim, bim_snp_cm_matched = modify_bim_file(chrom, bim_fp, gwas_df,cm_fp)
 
-bim_snp_cm_matched = modify_bim_file(chrom, bim_fp, gwas_df,cm_fp)
 # =============================================================================
-#STEP 4: GENERATE ANNOTATION FILE AND EXTRACT UNIQUE SNPS TO PREP FOR PLINK EXTRACTION OF MODIFIED .BIM FILE
+#STEP 2: GENERATE ANNOTATION FILE AND PREP FORMATTING 
 # =============================================================================
-gwas_chr = gwas_df.loc[gwas_df.CHR == chrom]                       
 #get the gtf and s_het dfs for our chromosome of interest 
-gtf_chr = gtf_df.loc[gtf_df.chr == chrom]
-s_het_chr = s_het_df.loc[s_het_df.chr == chrom].drop(columns="chr")
+def generate_annotation_file(chrom,gwas_df,gtf_df, s_het_df,cm_fp):
+    gwas_chr = gwas_df.loc[gwas_df.CHR == chrom]                       
+    gtf_chr = gtf_df.loc[gtf_df.chr == chrom]
+    s_het_chr = s_het_df.loc[s_het_df.chr == chrom].drop(columns="chr")
+    cm_df = pd.read_csv(cm_fp,sep="\t",header=None,names=["CHR","SNP","CM","POS","A1","A2"])
+    
+    #drop the genes that are not present in the s_het dataframe
+    gtf_chr_tidy = s_het_chr.join(gtf_chr.set_index("GeneSymbol"),how="inner")[["chr","start","end","gene"]]
+    
+    #find the 5 nearest genes by absolute difference in mutation position and gene start position
+    def nearest_gene_finder(m):
+        #get the absolute l1 distance 
+        dists = np.abs(gtf_chr_tidy.loc[gtf_chr_tidy.chr == m.CHR,"start"] - m.POS)
+        top_5 = dists.sort_values()[0:5]
+        out = dict(m)
+        for i in range(5):
+            out["GeneSymbol.f%s"%(i+1)] = top_5.index[i]
+            out["dist.f%s"%(i+1)] = 1/1000 if top_5.values[i] == 0 else top_5.values[i]/1000
+        return(pd.Series(out))
+    pandarallel.initialize(progress_bar=True, nb_workers=6)
+    nearest_genes_chr = gwas_chr.parallel_apply(lambda m: nearest_gene_finder(m),axis=1)
+    gc.collect()
+    
+    #join s_het values by GeneSymbol and weight by inverse distance
+    annot_df_prep = nearest_genes_chr.copy(deep=True)
+    for i in range(1,6):
+        s_het_temp = s_het_chr[["post_mean"]].reset_index().rename(columns = {"post_mean":"s_het.f%s"%(i),"GeneSymbol":"GeneSymbol.f%s"%(i)}).set_index("GeneSymbol.f%s"%(i))
+        annot_df_prep = annot_df_prep.reset_index().set_index("GeneSymbol.f%s"%(i)).join(s_het_temp)
+        annot_df_prep["s_het_w.f%s"%(i)] = annot_df_prep["s_het.f%s"%(i)]/annot_df_prep["dist.f%s"%(i)]
+    annot_df_prep = annot_df_prep.reset_index()
+    
+    #prep the annotation dataframe formatting for LD score computation
+    names = ["CHR","BP", "SNP", "CM"] + ["s_het_w.f%s"%(i) for i in range(1,6)]
+    
+    annot_df_prep = annot_df_prep.rename(columns={"POS":"BP","variant":"SNP"})
+    annot_df_prep = annot_df_prep.merge(cm_df[["SNP","CM"]],on="SNP",how="left")
+    annot_df_prep.CM = annot_df_prep.CM.fillna(1.0)
+    annot_df_prep = annot_df_prep[names]
+    return annot_df_prep, names
+annot_df_prep,names = generate_annotation_file(chrom,gwas_df,gtf_df, s_het_df,cm_fp)
 
-#drop the genes that are not present in the s_het dataframe
-gtf_chr_tidy = s_het_chr.join(gtf_chr.set_index("GeneSymbol"),how="inner")[["chr","start","end","gene"]]
-
-#find the 5 nearest genes by absolute difference in mutation position and gene start position
-def nearest_gene_finder(m):
-    #get the absolute l1 distance 
-    dists = np.abs(gtf_chr_tidy.loc[gtf_chr_tidy.chr == m.CHR,"start"] - m.POS)
-    top_5 = dists.sort_values()[0:5]
-    out = dict(m)
-    for i in range(5):
-        out["GeneSymbol.f%s"%(i+1)] = top_5.index[i]
-        out["dist.f%s"%(i+1)] = 1/1000 if top_5.values[i] == 0 else top_5.values[i]/1000
-    return(pd.Series(out))
-pandarallel.initialize(progress_bar=True, nb_workers=6)
-nearest_genes_chr = gwas_chr.parallel_apply(lambda m: nearest_gene_finder(m),axis=1)
-gc.collect()
-
-#join s_het values by GeneSymbol and weight by inverse distance
-annot_df_prep = nearest_genes_chr.copy(deep=True)
-for i in range(1,6):
-    s_het_temp = s_het_chr[["post_mean"]].reset_index().rename(columns = {"post_mean":"s_het.f%s"%(i),"GeneSymbol":"GeneSymbol.f%s"%(i)}).set_index("GeneSymbol.f%s"%(i))
-    annot_df_prep = annot_df_prep.reset_index().set_index("GeneSymbol.f%s"%(i)).join(s_het_temp)
-    annot_df_prep["s_het_w.f%s"%(i)] = annot_df_prep["s_het.f%s"%(i)]/annot_df_prep["dist.f%s"%(i)]
-annot_df_prep = annot_df_prep.reset_index() 
-print("annotation file generated")
 # =============================================================================
-#STEP 5: PREP THE ANNOTATION DF, UNIQUE SNP IDS, AND BIM DFS, WRITE TO DISK AS TXT FILES
+#STEP 3: EXTRACT UNIQUE SNPS TO PREP FOR PLINK EXTRACTION OF MODIFIED .BIM FILE
 # =============================================================================
-#prep the annotation dataframe formatting for LD score computation
-names = ["CHR","BP", "SNP", "CM"] + ["s_het_w.f%s"%(i) for i in range(1,6)]
-
-annot_df_prep = annot_df_prep.rename(columns={"POS":"BP","variant":"SNP"})
-annot_df_prep = annot_df_prep.merge(cm_df[["SNP","CM"]],on="SNP",how="left")
-annot_df_prep.CM = annot_df_prep.CM.fillna(1.0)
-annot_df_prep = annot_df_prep[names]
-
 # find the unique snps common between the annotation file and the .bim prepped file and write to disk
 # filter/order the .annot file
 # .bim file filter and order will be handled in the plink extraction step next with the unique ids we write out
-unique_snp_ids = annot_df_prep.merge(bim_snp_cm_matched,on="SNP")["SNP"].drop_duplicates()
-annot_df = annot_df_prep.set_index("SNP").loc[unique_snp_ids].reset_index()[names]
-print("annotation file filtered")
-#write annotation df, bim file, and unique snp ids out to .txt files
-branch_fp = "ld_score_outputs/chr%s/"%(chrom)
-
-annot_fp = root_fp + branch_fp + "s_het_w_chr%s.annot"%(chrom)
-annot_df.to_csv(annot_fp,sep="\t",index=False)
-
-unique_snp_fp = root_fp + branch_fp + "converted_plink_triplet/unique_snps_chr%s.txt"%(chrom)
-unique_snp_ids.to_csv(unique_snp_fp,sep="\t",header=None,index=False)
-
-bim_fp_old = vcf_to_plink_out_fp +"_v0.bim"
-bim.to_csv(bim_fp_old, sep="\t",header=None,index=False)
-bim_snp_cm_matched[list(bim.columns.values)].to_csv(bim_fp, sep="\t",header=None,index=False)
-print("annotation file and unique snps written to disk")
+def prep_plink_extract(chrom, annot_df_prep, bim_snp_cm_matched, branch_fp, bim_fp, bim):
+    unique_snp_ids = annot_df_prep.merge(bim_snp_cm_matched,on="SNP")["SNP"].drop_duplicates()
+    
+    unique_snp_fp = root_fp + branch_fp + "converted_plink_triplet/unique_snps_chr%s.txt"%(chrom)
+    unique_snp_ids.to_csv(unique_snp_fp,sep="\t",header=None,index=False)
+    
+    bim_fp_old =  root_fp + branch_fp + "converted_plink_triplet/%s_1000g_v0.bim"%(chrom)
+    bim.to_csv(bim_fp_old, sep="\t",header=None,index=False)
+    bim_snp_cm_matched[list(bim.columns.values)].to_csv(bim_fp, sep="\t",header=None,index=False)
+    
+    out_fp = root_fp + branch_fp + "extracted_plink_triplet/%s_filt"%(chrom)
+    plink_extraction_cmd = "plink --bfile %s --extract %s --make-bed --out %s"%(bim_fp.split(".bim")[0], unique_snp_fp, out_fp)
+    print(plink_extraction_cmd)
+prep_plink_extract(chrom, annot_df_prep, bim_snp_cm_matched, branch_fp, bim_fp, bim)
 
 # =============================================================================
-#STEP 6: RUN THE PLINK EXTRACTION ON THE BIM FILE USING THE UNIQUE SNPS TXT FILE
+#STEP 4: READ IN FILTERED .BIM FILE AND FILTER/ORDER THE ANNOTATION FILE TO MATCH SNP ORDERING
 # =============================================================================
-branch_fp = "ld_score_outputs/chr%s/"%(chrom)
-out_fp = root_fp + branch_fp + "extracted_plink_triplet/%s_filt"%(chrom)
-plink_extraction_cmd = "plink --bfile %s --extract %s --make-bed --out %s"%(bim_fp.split(".bim")[0], unique_snp_fp, out_fp)
-print(plink_extraction_cmd)
-
+def filter_annotation_file(chrom, root_fp, branch_fp, annot_df_prep):
+    filtered_bim_fp = root_fp + branch_fp + "extracted_plink_triplet/%s_filt.bim"%(chrom)
+    filtered_bim = pd.read_csv(filtered_bim_fp,sep="\t",header=None,names=["CHR","SNP","CM","POS","A1","A2"])
+    
+    filtered_snp_ids = filtered_bim.SNP.values
+    annot_df = annot_df_prep.set_index("SNP").loc[filtered_snp_ids].reset_index()[names]
+    
+    annot_fp = root_fp + branch_fp + "s_het_w_chr%s.annot"%(chrom)
+    annot_df.to_csv(annot_fp,sep="\t",index=False)
+    print("annotation file filtered and written to disk")
+filter_annotation_file(chrom, root_fp, branch_fp, annot_df_prep)
 # =============================================================================
 #STEP 7: RUN THE LD SCORE COMPUTATION
 # =============================================================================
-ld_score_fp = root_fp + branch_fp + "ld_scores/s_het_w_chr%s"%(chrom)
-ld_score_cmd = "python ldsc.py --l2 --bfile %s --ld-wind-cm 1 --annot %s --out %s"%(out_fp,annot_fp,ld_score_fp)
-print(ld_score_cmd)
-
+def prep_ld_score_compute(chrom, root_fp, branch_fp):
+    out_fp = root_fp + branch_fp + "extracted_plink_triplet/%s_filt"%(chrom)
+    annot_fp = root_fp + branch_fp + "s_het_w_chr%s.annot"%(chrom)
+    ld_score_fp = root_fp + branch_fp + "ld_scores/s_het_w_chr%s"%(chrom)
+    ld_score_cmd = "python ldsc.py --l2 --bfile %s --ld-wind-cm 1 --annot %s --out %s"%(out_fp,annot_fp,ld_score_fp)
+    print(ld_score_cmd)
+prep_ld_score_compute(chrom, root_fp, branch_fp)
 
 
 
