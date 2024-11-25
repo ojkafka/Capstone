@@ -1,0 +1,41 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.1
+* (C) 2014-2019 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--h2 /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/GWAS_SumStats.sumstats.gz \
+--ref-ld-chr /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c1.0_annotations_ldscores_heritability/s_het_w_chr \
+--out /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c1.0_annotations_ldscores_heritability/s_het_heritability \
+--overlap-annot  \
+--frqfile-chr /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/frq_files/WB. \
+--w-ld-chr /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/weights_hm3_no_hla/weights. 
+
+Beginning analysis at Fri Nov 22 16:17:28 2024
+Reading summary statistics from /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/GWAS_SumStats.sumstats.gz ...
+Read summary statistics for 1085137 SNPs.
+Reading reference panel LD Score from /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c1.0_annotations_ldscores_heritability/s_het_w_chr[1-22] ... (ldscore_fromlist)
+Traceback (most recent call last):
+  File "ldsc.py", line 644, in <module>
+    sumstats.estimate_h2(args, log)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/sumstats.py", line 326, in estimate_h2
+    args, log, args.h2)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/sumstats.py", line 243, in _read_ld_sumstats
+    ref_ld = _read_ref_ld(args, log)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/sumstats.py", line 82, in _read_ref_ld
+    'reference panel LD Score', ps.ldscore_fromlist)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/sumstats.py", line 152, in _read_chr_split_files
+    out = parsefunc(_splitp(chr_arg), _N_CHR, **kwargs)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/parse.py", line 103, in ldscore_fromlist
+    y = ldscore(fh, num)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/parse.py", line 148, in ldscore
+    s, compression = which_compression(first_fh)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/parse.py", line 53, in which_compression
+    raise IOError('Could not open {F}[./gz/bz2]'.format(F=fh))
+IOError: Could not open /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c1.0_annotations_ldscores_heritability/s_het_w_chr1.l2.ldscore[./gz/bz2]
+
+Analysis finished at Fri Nov 22 16:17:29 2024
+Total time elapsed: 1.2s
