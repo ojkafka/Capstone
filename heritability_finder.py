@@ -33,6 +33,10 @@ out_list = [annot_root + annot_prefix + str(i) for i in range(1,23)]          # 
 if not (len(bfile_list) == len(annot_list) == len(out_list)):
     raise ValueError("The bfile, annot, and out lists must have the same length.")
 
+# Iterate over the chromosomes and order the annotation file in the same SNP order as the .bim file
+
+
+
 # Iterate over the chromosomes and compute the ld scores
 for bfile, annot, out in zip(bfile_list, annot_list, out_list):
     command = [
