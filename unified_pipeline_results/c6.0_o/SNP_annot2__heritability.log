@@ -1,0 +1,38 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.1
+* (C) 2014-2019 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--h2 /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/GWAS_SumStats.sumstats.gz \
+--ref-ld-chr /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c6.0_o/SNP_annot2_ \
+--out /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c6.0_o/SNP_annot2__heritability \
+--overlap-annot  \
+--frqfile-chr /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/frq_files/WB. \
+--w-ld-chr /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/weights_hm3_no_hla/weights. \
+--print-coefficients  
+
+Beginning analysis at Tue Dec 10 18:39:21 2024
+Reading summary statistics from /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/GWAS_SumStats.sumstats.gz ...
+Read summary statistics for 1085137 SNPs.
+Reading reference panel LD Score from /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c6.0_o/SNP_annot2_[1-22] ... (ldscore_fromlist)
+Read reference panel LD Scores for 1179709 SNPs.
+Removing partitioned LD Scores with zero variance.
+Reading regression weight LD Score from /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/reference_files/weights_hm3_no_hla/weights.[1-22] ... (ldscore_fromlist)
+Read regression weight LD Scores for 1242169 SNPs.
+After merging with reference panel LD, 1071008 SNPs remain.
+After merging with regression SNP LD, 1035871 SNPs remain.
+Removed 458 SNPs with chi^2 > 360.388 (1035413 SNPs remain)
+Total Observed scale h2: 0.4836 (0.0223)
+Categories: s_het_post_1L2_0 s_het_post_2L2_0 s_het_post_3L2_0 CM_baselineL2_0 base_baselineL2_0 Coding_UCSC.bed_baselineL2_0 Coding_UCSC.extend.500.bed_baselineL2_0 CTCF_Hoffman.bed_baselineL2_0 CTCF_Hoffman.extend.500.bed_baselineL2_0 DGF_ENCODE.bed_baselineL2_0 DGF_ENCODE.extend.500.bed_baselineL2_0 DHS_peaks_Trynka.bed_baselineL2_0 DHS_Trynka.bed_baselineL2_0 DHS_Trynka.extend.500.bed_baselineL2_0 Enhancer_Andersson.bed_baselineL2_0 Enhancer_Andersson.extend.500.bed_baselineL2_0 Enhancer_Hoffman.bed_baselineL2_0 Enhancer_Hoffman.extend.500.bed_baselineL2_0 FetalDHS_Trynka.bed_baselineL2_0 FetalDHS_Trynka.extend.500.bed_baselineL2_0 H3K27ac_Hnisz.bed_baselineL2_0 H3K27ac_Hnisz.extend.500.bed_baselineL2_0 H3K27ac_PGC2.bed_baselineL2_0 H3K27ac_PGC2.extend.500.bed_baselineL2_0 H3K4me1_peaks_Trynka.bed_baselineL2_0 H3K4me1_Trynka.bed_baselineL2_0 H3K4me1_Trynka.extend.500.bed_baselineL2_0 H3K4me3_peaks_Trynka.bed_baselineL2_0 H3K4me3_Trynka.bed_baselineL2_0 H3K4me3_Trynka.extend.500.bed_baselineL2_0 H3K9ac_peaks_Trynka.bed_baselineL2_0 H3K9ac_Trynka.bed_baselineL2_0 H3K9ac_Trynka.extend.500.bed_baselineL2_0 Intron_UCSC.bed_baselineL2_0 Intron_UCSC.extend.500.bed_baselineL2_0 PromoterFlanking_Hoffman.bed_baselineL2_0 PromoterFlanking_Hoffman.extend.500.bed_baselineL2_0 Promoter_UCSC.bed_baselineL2_0 Promoter_UCSC.extend.500.bed_baselineL2_0 Repressed_Hoffman.bed_baselineL2_0 Repressed_Hoffman.extend.500.bed_baselineL2_0 SuperEnhancer_Hnisz.bed_baselineL2_0 SuperEnhancer_Hnisz.extend.500.bed_baselineL2_0 TFBS_ENCODE.bed_baselineL2_0 TFBS_ENCODE.extend.500.bed_baselineL2_0 Transcribed_Hoffman.bed_baselineL2_0 Transcribed_Hoffman.extend.500.bed_baselineL2_0 TSS_Hoffman.bed_baselineL2_0 TSS_Hoffman.extend.500.bed_baselineL2_0 UTR_3_UCSC.bed_baselineL2_0 UTR_3_UCSC.extend.500.bed_baselineL2_0 UTR_5_UCSC.bed_baselineL2_0 UTR_5_UCSC.extend.500.bed_baselineL2_0 WeakEnhancer_Hoffman.bed_baselineL2_0 WeakEnhancer_Hoffman.extend.500.bed_baselineL2_0
+Lambda GC: 2.5046
+Mean Chi^2: 4.5209
+Intercept: 1.0947 (0.0573)
+Ratio: 0.0269 (0.0163)
+Reading annot matrix from /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c6.0_o/SNP_annot2_[1-22] ... (annot)
+Results printed to /Users/tanvibansal/Documents/GitHub/Capstone/unified_pipeline_results/c6.0_o/SNP_annot2__heritability.results
+Analysis finished at Tue Dec 10 18:39:56 2024
+Total time elapsed: 34.64s
