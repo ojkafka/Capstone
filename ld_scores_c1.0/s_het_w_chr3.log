@@ -1,0 +1,71 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.1
+* (C) 2014-2019 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--ld-wind-cm 1.0 \
+--out /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/ld_scores/s_het_w_chr3 \
+--bfile /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/extracted_plink_triplet/3_filt \
+--annot /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/s_het_w_chr3.annot \
+--l2  
+
+Beginning analysis at Tue Nov 12 09:45:53 2024
+Read list of 82577 SNPs from /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/extracted_plink_triplet/3_filt.bim
+Read 5 annotations for 82577 SNPs from /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/s_het_w_chr3.annot
+Read list of 503 individuals from /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/extracted_plink_triplet/3_filt.fam
+Reading genotypes from /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/extracted_plink_triplet/3_filt.bed
+Estimating LD Score.
+Writing LD Scores for 82577 SNPs to /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/ld_scores/s_het_w_chr3.l2.ldscore.gz
+
+Summary of LD Scores in /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr3/ld_scores/s_het_w_chr3.l2.ldscore.gz
+         MAF  s_het_w.f1L2  s_het_w.f2L2  s_het_w.f3L2  s_het_w.f4L2  s_het_w.f5L2
+mean  0.2411        0.1813        0.0108        0.0051        0.0034        0.0027
+std   0.1424        1.2656        0.0324        0.0143        0.0087        0.0076
+min   0.0050       -0.1670       -0.0017       -0.0010       -0.0003       -0.0002
+25%   0.1173        0.0024        0.0005        0.0003        0.0003        0.0002
+50%   0.2326        0.0133        0.0021        0.0011        0.0008        0.0007
+75%   0.3638        0.0664        0.0068        0.0037        0.0028        0.0022
+max   0.5000       59.8849        0.5196        0.2143        0.1232        0.0980
+
+MAF/LD Score Correlation Matrix
+                 MAF  s_het_w.f1L2  s_het_w.f2L2  s_het_w.f3L2  s_het_w.f4L2  s_het_w.f5L2
+MAF           1.0000        0.0228        0.0460        0.0880        0.0932        0.0910
+s_het_w.f1L2  0.0228        1.0000        0.2347        0.2618        0.2586        0.2463
+s_het_w.f2L2  0.0460        0.2347        1.0000        0.8063        0.7191        0.7509
+s_het_w.f3L2  0.0880        0.2618        0.8063        1.0000        0.8216        0.8716
+s_het_w.f4L2  0.0932        0.2586        0.7191        0.8216        1.0000        0.8267
+s_het_w.f5L2  0.0910        0.2463        0.7509        0.8716        0.8267        1.0000
+
+LD Score Matrix Condition Number
+412.6871
+
+Annotation Correlation Matrix
+            s_het_w.f1  s_het_w.f2  s_het_w.f3  s_het_w.f4  s_het_w.f5
+s_het_w.f1      1.0000      0.0047      0.0092      0.0091      0.0069
+s_het_w.f2      0.0047      1.0000      0.0870      0.0985      0.0790
+s_het_w.f3      0.0092      0.0870      1.0000      0.0954      0.1613
+s_het_w.f4      0.0091      0.0985      0.0954      1.0000      0.1209
+s_het_w.f5      0.0069      0.0790      0.1613      0.1209      1.0000
+
+Annotation Matrix Column Sums
+s_het_w.f1    556.6406
+s_het_w.f2     31.7917
+s_het_w.f3     14.9872
+s_het_w.f4     10.6883
+s_het_w.f5      8.1846
+
+Summary of Annotation Matrix Row Sums
+count    8.2577e+04
+mean     7.5359e-03
+std      3.5606e-01
+min      1.1905e-05
+25%      3.1344e-04
+50%      7.2911e-04
+75%      1.8348e-03
+max      5.9231e+01
+Analysis finished at Tue Nov 12 09:46:06 2024
+Total time elapsed: 13.09s

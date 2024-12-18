@@ -1,0 +1,41 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.1
+* (C) 2014-2019 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--ld-wind-cm 1.0 \
+--out /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr22/ld_scores/s_het_w_chr1 \
+--bfile /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr22/extracted_plink_triplet/1_filt \
+--annot /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr22/s_het_w_chr1.annot \
+--l2  
+
+Beginning analysis at Tue Nov 12 09:42:59 2024
+Traceback (most recent call last):
+  File "ldsc.py", line 620, in <module>
+    ldscore(args, log)
+  File "ldsc.py", line 135, in ldscore
+    array_snps = snp_obj(snp_file)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/parse.py", line 256, in __init__
+    self.__read__(fname)
+  File "/Users/tanvibansal/Documents/GitHub/ldsc/ldscore/parse.py", line 266, in __read__
+    delim_whitespace=True, compression=comp)
+  File "/opt/anaconda3/envs/ldsc/lib/python2.7/site-packages/pandas/io/parsers.py", line 655, in parser_f
+    return _read(filepath_or_buffer, kwds)
+  File "/opt/anaconda3/envs/ldsc/lib/python2.7/site-packages/pandas/io/parsers.py", line 405, in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+  File "/opt/anaconda3/envs/ldsc/lib/python2.7/site-packages/pandas/io/parsers.py", line 764, in __init__
+    self._make_engine(self.engine)
+  File "/opt/anaconda3/envs/ldsc/lib/python2.7/site-packages/pandas/io/parsers.py", line 985, in _make_engine
+    self._engine = CParserWrapper(self.f, **self.options)
+  File "/opt/anaconda3/envs/ldsc/lib/python2.7/site-packages/pandas/io/parsers.py", line 1605, in __init__
+    self._reader = parsers.TextReader(src, **kwds)
+  File "pandas/_libs/parsers.pyx", line 394, in pandas._libs.parsers.TextReader.__cinit__ (pandas/_libs/parsers.c:4209)
+  File "pandas/_libs/parsers.pyx", line 710, in pandas._libs.parsers.TextReader._setup_parser_source (pandas/_libs/parsers.c:8873)
+IOError: File /Users/tanvibansal/Documents/GitHub/Capstone/ld_score_outputs/chr22/extracted_plink_triplet/1_filt.bim does not exist
+
+Analysis finished at Tue Nov 12 09:42:59 2024
+Total time elapsed: 0.0s
