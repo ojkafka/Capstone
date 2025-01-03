@@ -1,0 +1,37 @@
+*********************************************************************
+* LD Score Regression (LDSC)
+* Version 1.0.1
+* (C) 2014-2019 Brendan Bulik-Sullivan and Hilary Finucane
+* Broad Institute of MIT and Harvard / MIT Department of Mathematics
+* GNU General Public License v3
+*********************************************************************
+Call: 
+./ldsc.py \
+--h2 Capstone/GWAS_SumStats.sumstats.gz \
+--ref-ld-chr tanvi_ldscores/s_het_w_chr \
+--out s_het_heritability \
+--overlap-annot  \
+--frqfile-chr Capstone/frq_files/WB. \
+--w-ld-chr Capstone/weights_hm3_no_hla/weights. 
+
+Beginning analysis at Mon Nov 18 14:07:16 2024
+Reading summary statistics from Capstone/GWAS_SumStats.sumstats.gz ...
+Read summary statistics for 1096648 SNPs.
+Reading reference panel LD Score from tanvi_ldscores/s_het_w_chr[1-22] ... (ldscore_fromlist)
+Read reference panel LD Scores for 1179709 SNPs.
+Removing partitioned LD Scores with zero variance.
+Reading regression weight LD Score from Capstone/weights_hm3_no_hla/weights.[1-22] ... (ldscore_fromlist)
+Read regression weight LD Scores for 1242190 SNPs.
+After merging with reference panel LD, 1071008 SNPs remain.
+After merging with regression SNP LD, 1035871 SNPs remain.
+Removed 458 SNPs with chi^2 > 360.388 (1035413 SNPs remain)
+Total Observed scale h2: 0.2174 (0.0194)
+Categories: s_het_w.f1L2_0 s_het_w.f2L2_0 s_het_w.f3L2_0 s_het_w.f4L2_0 s_het_w.f5L2_0
+Lambda GC: 2.5046
+Mean Chi^2: 4.5209
+Intercept: 2.4204 (0.0793)
+Ratio: 0.4034 (0.0225)
+Reading annot matrix from tanvi_ldscores/s_het_w_chr[1-22] ... (annot)
+Results printed to s_het_heritability.results
+Analysis finished at Mon Nov 18 14:07:31 2024
+Total time elapsed: 14.55s
